@@ -1,0 +1,13 @@
+mouse.namedb
+mouse.namedb.fullname
+mouse.protein.faa
+mouse.protein.faa.phr
+mouse.protein.faa.pin
+mouse.protein.faa.pnd
+mouse.protein.faa.pni
+mouse.protein.faa.psd
+mouse.protein.faa.psi
+mouse.protein.faa.psq
+*.pyc
+petMar_lamp3.fasta
+petMar_mrna.lamp3.orig.fasta.gz
