@@ -9,5 +9,6 @@ mouse.protein.faa.psd
 mouse.protein.faa.psi
 mouse.protein.faa.psq
 *.pyc
+petMar_lamp0.fasta
 petMar_lamp3.fasta
 petMar_mrna.lamp3.orig.fasta.gz

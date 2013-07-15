@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if hash legacy_blast.pl 2>/dev/null; then
+  legacy_blast.pl "$@" --path $(dirname `which legacy_blast.pl`)
+else
+  "$@"
+fi
