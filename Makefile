@@ -104,8 +104,8 @@ lamp0.x.lamp3: lamp3.makeblastdb
 	blastn -db $(DATA_DIR)/petMar_lamp0.fasta -query $(DATA_DIR)/petMar_lamp3.fasta $(THREADED) $(EVALUE) $(AS_TSV) > $(DATA_DIR)/lamp0.x.lamp3.tsv
 
 lamp0.x.lamp3.best_matches: lamp0.x.lamp3
-	$(BEST_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp0.fasta > $(DATA_DIR)/lamp0.x.lamp3.best_matches.tsv
+	$(BEST_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp3.fasta > $(DATA_DIR)/lamp0.x.lamp3.best_matches.tsv
 
 lamp0.x.lamp3.total_matches: lamp0.x.lamp3
-	$(TOTAL_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp0.fasta > $(DATA_DIR)/lamp0.x.lamp3.total_matches.tsv
+	$(TOTAL_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp3.fasta > $(DATA_DIR)/lamp0.x.lamp3.total_matches.tsv
 
