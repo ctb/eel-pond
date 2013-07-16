@@ -57,11 +57,12 @@ EVALUE = -evalue 1e-6
 DATA_DIR = data
 AS_TSV = -outfmt 6
 
-# this is really just for my computer. there's no ./configure script so... oh well.
+# This is really just for my computer. there's no ./configure script so... oh well.
 THREADED = -num_threads 8
 
 BEST_MATCH = python best_match.py
 TOTAL_MATCH = python total_match.py
+
 
 lamp3.makeblastdb:
 	makeblastdb -in $(DATA_DIR)/petMar_lamp3.fasta -dbtype nucl
