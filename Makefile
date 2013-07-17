@@ -49,9 +49,8 @@ lamp3.x.mouse.ortho: lamp3.x.mouse mouse.x.lamp3
 
 # Dylan:
 # The following targets use BLAST 2.2.28+. We should remedy the incompatibility at some point.
-# They also expect the petMar_lamp* databases in $(DATA_DIR)/ to prevent spew from makeblastdb
+# They also expect the petMar_lamp* databases in data/ to prevent spew from makeblastdb
 # In short these are pretty much a disparate set of targets from above.
-# Naming convention is forward logical DNS to facilitate "obvious" autocompletion and discovery.
 
 EVALUE = -evalue 1e-6
 DATA_DIR = data
@@ -63,50 +62,69 @@ THREADED = -num_threads 8
 BEST_MATCH = python best_match.py
 TOTAL_MATCH = python total_match.py
 
+# Note: Make does not support multiple output targets for a single rule
+# without resorting to PHONIES, which will rerun every time. Instead we
+# just add noop rules for the other two files and pretend the first one
+# is representative of all of them.
 
-lamp3.makeblastdb:
-	makeblastdb -in $(DATA_DIR)/petMar_lamp3.fasta -dbtype nucl
+data/petMar_lamp3.fasta.nhr:
+	makeblastdb -in data/petMar_lamp3.fasta -dbtype nucl
+data/petMar_lamp3.fasta.nin: data/petMar_lamp3.fasta.nhr
+data/petMar_lamp3.fasta.nsq: data/petMar_lamp3.fasta.nhr
 
-lamp0.makeblastdb:
-	makeblastdb -in $(DATA_DIR)/petMar_lamp0.fasta -dbtype nucl
-
-p_marinus.rm_vlr:
-	python lymphilter.py $(DATA_DIR)/p_marinus.cds.fa $(DATA_DIR)/p_marinus.no_vlr.cds.fa
-
-
-
-p_marinus.x.lamp3: lamp3.makeblastdb
-	blastn -db $(DATA_DIR)/petMar_lamp3.fasta -query $(DATA_DIR)/p_marinus.cds.fa $(EVALUE) $(AS_TSV) > p_marinus.x.lamp3.tsv
-
-p_marinus.no_vlr.x.lamp3: lamp3.makeblastdb p_marinus.rm_vlr
-	blastn -db $(DATA_DIR)/petMar_lamp3.fasta -query $(DATA_DIR)/p_marinus.no_vlr.cds.fa $(THREADED) $(EVALUE) $(AS_TSV) > $(DATA_DIR)/p_marinus.no_vlr.x.lamp3.tsv
-
-p_marinus.no_vlr.x.lamp3.best_matches: p_marinus.no_vlr.x.lamp3
-	$(BEST_MATCH) $(DATA_DIR)/p_marinus.no_vlr.x.lamp3.tsv $(DATA_DIR)/p_marinus.no_vlr.cds.fa > $(DATA_DIR)/p_marinus.no_vlr.x.lamp3.best_matches.tsv
-
-p_marinus.no_vlr.x.lamp3.total_matches: p_marinus.no_vlr.x.lamp3
-	$(TOTAL_MATCH) $(DATA_DIR)/p_marinus.no_vlr.x.lamp3.tsv $(DATA_DIR)/p_marinus.no_vlr.cds.fa > $(DATA_DIR)/p_marinus.no_vlr.x.lamp3.total_matches.tsv
+data/petMar_lamp0.fasta.nhr:
+	makeblastdb -in data/petMar_lamp0.fasta -dbtype nucl
+data/petMar_lamp0.fasta.nin: data/petMar_lamp0.fasta.nhr
+data/petMar_lamp0.fasta.nsq: data/petMar_lamp0.fasta.nhr
 
 
-p_marinus.x.lamp0: lamp0.makeblastdb
-	blastn -db $(DATA_DIR)/petMar_lamp0.fasta -query $(DATA_DIR)/p_marinus.cds.fa $(EVALUE) $(AS_TSV) > p_marinus.x.lamp0.tsv
+data/p_marinus.no_vlr.cds.fa:
+	python lymphilter.py data/p_marinus.cds.fa data/p_marinus.no_vlr.cds.fa
 
-p_marinus.no_vlr.x.lamp0: lamp0.makeblastdb p_marinus.rm_vlr
-	blastn -db $(DATA_DIR)/petMar_lamp0.fasta -query $(DATA_DIR)/p_marinus.no_vlr.cds.fa $(THREADED) $(EVALUE) $(AS_TSV) > $(DATA_DIR)/p_marinus.no_vlr.x.lamp0.tsv
+data/genes_of_interest.faa:
+	python accession_lookup.py data/genes_of_interest.tsv $@
 
-p_marinus.no_vlr.x.lamp0.best_matches: p_marinus.no_vlr.x.lamp0
-	$(BEST_MATCH) $(DATA_DIR)/p_marinus.no_vlr.x.lamp0.tsv $(DATA_DIR)/p_marinus.no_vlr.cds.fa > $(DATA_DIR)/p_marinus.no_vlr.x.lamp0.best_matches.tsv
+data/p_marinus.x.lamp3.tsv: data/petMar_lamp3.fasta.nhr
+	blastn -db data/petMar_lamp3.fasta -query data/p_marinus.cds.fa $(EVALUE) $(AS_TSV) > $@
 
-p_marinus.no_vlr.x.lamp0.total_matches: p_marinus.no_vlr.x.lamp0
-	$(TOTAL_MATCH) $(DATA_DIR)/p_marinus.no_vlr.x.lamp0.tsv $(DATA_DIR)/p_marinus.no_vlr.cds.fa > $(DATA_DIR)/p_marinus.no_vlr.x.lamp0.total_matches.tsv
+data/p_marinus.no_vlr.x.lamp3.tsv: data/petMar_lamp3.fasta.nhr data/p_marinus.no_vlr.cds.fa
+	blastn -db data/petMar_lamp3.fasta -query data/p_marinus.no_vlr.cds.fa $(THREADED) $(EVALUE) $(AS_TSV) > $@
+
+data/p_marinus.no_vlr.x.lamp3.best_matches.tsv: data/p_marinus.no_vlr.x.lamp3.tsv
+	$(BEST_MATCH) data/p_marinus.no_vlr.x.lamp3.tsv data/p_marinus.no_vlr.cds.fa > $@
+
+data/p_marinus.no_vlr.x.lamp3.total_matches.tsv: data/p_marinus.no_vlr.x.lamp3.tsv
+	$(TOTAL_MATCH) data/p_marinus.no_vlr.x.lamp3.tsv data/p_marinus.no_vlr.cds.fa > $@
 
 
-lamp0.x.lamp3: lamp3.makeblastdb
-	blastn -db $(DATA_DIR)/petMar_lamp0.fasta -query $(DATA_DIR)/petMar_lamp3.fasta $(THREADED) $(EVALUE) $(AS_TSV) > $(DATA_DIR)/lamp0.x.lamp3.tsv
+data/p_marinus.x.lamp0.tsv: data/petMar_lamp0.fasta.nhr
+	blastn -db data/petMar_lamp0.fasta -query data/p_marinus.cds.fa $(EVALUE) $(AS_TSV) > $@
 
-lamp0.x.lamp3.best_matches: lamp0.x.lamp3
-	$(BEST_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp3.fasta > $(DATA_DIR)/lamp0.x.lamp3.best_matches.tsv
+data/p_marinus.no_vlr.x.lamp0.tsv: data/petMar_lamp0.fasta.nhr data/p_marinus.no_vlr.cds.fa
+	blastn -db data/petMar_lamp0.fasta -query data/p_marinus.no_vlr.cds.fa $(THREADED) $(EVALUE) $(AS_TSV) > $@
 
-lamp0.x.lamp3.total_matches: lamp0.x.lamp3
-	$(TOTAL_MATCH) $(DATA_DIR)/lamp0.x.lamp3.tsv $(DATA_DIR)/petMar_lamp3.fasta > $(DATA_DIR)/lamp0.x.lamp3.total_matches.tsv
+data/p_marinus.no_vlr.x.lamp0.best_matches.tsv: data/p_marinus.no_vlr.x.lamp0.tsv
+	$(BEST_MATCH) data/p_marinus.no_vlr.x.lamp0.tsv data/p_marinus.no_vlr.cds.fa > $@
 
+data/p_marinus.no_vlr.x.lamp0.total_matches.tsv: data/p_marinus.no_vlr.x.lamp0.tsv
+	$(TOTAL_MATCH) data/p_marinus.no_vlr.x.lamp0.tsv data/p_marinus.no_vlr.cds.fa > $@
+
+
+data/lamp0.x.lamp3.tsv: data/petMar_lamp3.fasta.nhr
+	blastn -db data/petMar_lamp0.fasta -query data/petMar_lamp3.fasta $(THREADED) $(EVALUE) $(AS_TSV) > $@
+
+data/lamp0.x.lamp3.best_matches.tsv: data/lamp0.x.lamp3.tsv
+	$(BEST_MATCH) data/lamp0.x.lamp3.tsv data/petMar_lamp3.fasta > $@
+
+data/lamp0.x.lamp3.total_matches.tsv: data/lamp0.x.lamp3.tsv
+	$(TOTAL_MATCH) data/lamp0.x.lamp3.tsv data/petMar_lamp3.fasta > $@
+
+
+data/goi.x.lamp3.tsv: data/petMar_lamp3.fasta.nhr data/genes_of_interest.faa
+	tblastn -db data/petMar_lamp3.fasta -query data/genes_of_interest.faa $(THREADED) $(EVALUE) $(AS_TSV) > $@
+
+data/goi.x.lamp3.best_matches.tsv: data/goi.x.lamp3.tsv
+	$(BEST_MATCH) data/goi.x.lamp3.tsv data/genes_of_interest.faa > $@
+
+data/goi.x.lamp3.total_matches.tsv: data/goi.x.lamp3.tsv
+	$(TOTAL_MATCH) data/goi.x.lamp3.tsv data/genes_of_interest.faa > $@
