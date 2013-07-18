@@ -12,6 +12,7 @@ seen_queries = dict()
 
 handle = open(sys.argv[2], 'r')
 queries = SeqIO.to_dict(SeqIO.parse(handle, 'fasta'))
+handle.close()
 
 with open(sys.argv[1]) as in_file:
     reader = csv.reader(in_file, delimiter='\t')
