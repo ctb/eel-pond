@@ -45,7 +45,11 @@ lamp3-longest.x.mouse.ortho: lamp3-longest.x.mouse mouse.x.lamp3-longest
 lamp3.x.mouse.ortho: lamp3.x.mouse mouse.x.lamp3
 	python make-reciprocal-best-hits.py lamp3.x.mouse mouse.x.lamp3 lamp3.x.mouse.ortho
 
+lamp3.x.mouse.homol: lamp3.x.mouse
+	python make-uni-best-hits.py lamp3.x.mouse lamp3.x.mouse.homol
 
+petMar_lamp3.fasta.annot: petMar_lamp3.fasta lamp3.x.mouse.ortho #lamp3.x.mouse.homol
+	python annotate-seqs.py petMar_lamp3.fasta lamp3.x.mouse.ortho lamp3.x.mouse.homol
 
 # Dylan:
 # The following targets use BLAST 2.2.28+. We should remedy the incompatibility at some point.
