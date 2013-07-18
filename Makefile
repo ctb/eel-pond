@@ -15,7 +15,7 @@ petMar_lamp3.fasta.nsq:
 	formatdb -i petMar_lamp3.fasta -o T -p F
 
 petMar_lamp3.fasta_screed: petMar_lamp3.fasta
-	python -m screed.fadbm patMar_lamp3.fasta
+	python -m screed.fadbm petMar_lamp3.fasta
 
 mouse.protein.faa_screed: mouse.protein.faa
 	python -m screed.fadbm mouse.protein.faa
