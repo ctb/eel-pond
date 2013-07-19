@@ -128,3 +128,13 @@ data/goi.x.lamp3.best_matches.tsv: data/goi.x.lamp3.tsv
 
 data/goi.x.lamp3.total_matches.tsv: data/goi.x.lamp3.tsv
 	$(TOTAL_MATCH) data/goi.x.lamp3.tsv data/genes_of_interest.faa > $@
+
+
+data/pmz.x.lamp3.blastout:
+	blastn -db data/petMar_lamp3.fasta -query data/pmz_sequences.fa $(THREADED) $(EVALUE) > pmz.x.lamp3.blastout
+
+data/lamp3.x.pmz.blastout:
+	blastn -db data/pmz_sequences.fa -query data/petMar_lamp3.fasta $(THREADED) $(EVALUE) > lamp3.x.pmz.blastout
+
+data/reciprocals.tsv:
+	python recip.py data/pmz.x.lamp3.blastout data/lamp3.x.pmz.blastout -o data/reciprocals.tsv
