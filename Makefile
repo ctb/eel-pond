@@ -137,4 +137,4 @@ data/lamp3.x.pmz.blastout:
 	blastn -db data/pmz_sequences.fa -query data/petMar_lamp3.fasta $(THREADED) $(EVALUE) > lamp3.x.pmz.blastout
 
 data/reciprocals.tsv:
-	python recip.py data/pmz.x.lamp3.blastout data/lamp3.x.pmz.blastout -o data/reciprocals.tsv
+	python reciprocals.py data/pmz.x.lamp3.blastout data/lamp3.x.pmz.blastout -o data/reciprocals.tsv
