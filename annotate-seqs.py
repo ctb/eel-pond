@@ -23,7 +23,7 @@ for n, record in enumerate(screed.open(sys.argv[1])):
         if h:
             h, score = h[0]
             score = round(float(score) / float(len(record.sequence)) * 100)
-            annot = namedb.mouse_names.get(h.split('|')[1])
+            annot = namedb.mouse_names[h.split('|')[1]]
             annot = "h=%d%% => " % score + annot
             annot += " "
     if annot:
