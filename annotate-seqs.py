@@ -3,6 +3,7 @@ import sys, screed
 from cPickle import load
 import namedb
 import argparse
+import os.path
 
 def transform_name(name, is_ncbi):
     if not is_ncbi:
@@ -56,7 +57,7 @@ def main():
                 if score > oldscore:
                     tr_dict[tr] = (oldscore, annot)
 
-    outfilename = sys.argv[1] + '.annot'
+    outfilename = os.path.basename(transcript_file) + '.annot'
     outfp = open(outfilename, 'w')
 
 
