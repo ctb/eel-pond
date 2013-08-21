@@ -15,6 +15,7 @@ for n, record in enumerate(screed.open(sys.argv[1])):
 
     o = ortho.get(name)
     if o:
+        print o, namedb.mouse_names.items()[:10]
         annot = namedb.mouse_names.get(o.split('|')[1])
         annot = "ortho:" + annot
     else:
@@ -22,6 +23,7 @@ for n, record in enumerate(screed.open(sys.argv[1])):
         
         if h:
             h, score = h[0]
+            print h, namedb.mouse_names.items()[:10]
             score = round(float(score) / float(len(record.sequence)) * 100)
             annot = namedb.mouse_names[h.split('|')[1]]
             annot = "h=%d%% => " % score + annot
