@@ -31,4 +31,4 @@ for n, record in enumerate(screed.open(sys.argv[1])):
     else:
         annot = record.description
 
-    print >>outfp, ">%s %s\n%s\n" % (record.name, annot, record.sequence)
+    print >>outfp, ">%s %s\n%s" % (record.name, annot, record.sequence)
