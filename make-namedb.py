@@ -9,7 +9,10 @@ outfile = sys.argv[2]
 d = {}
 e = {}
 for record in screed.open(sys.argv[1]):
-    ident = record.name.split('|')[3]
+    if record.name.startswith('gi|'):
+       ident = record.name.split('|')[3]
+    else:
+       ident = record.name
     d[ident] = record.description
     e[ident] = record.name
 

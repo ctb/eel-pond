@@ -4,13 +4,13 @@ import sys
 import gzip
 import os
 
-prefix='lamp3'
+prefix=sys.argv[1]
 
-filename = sys.argv[1]
+filename = sys.argv[2]
 
 # first pass: count partition sizes
 partition_sizes = {}
-for n, record in enumerate(screed.open(filename)):
+for n, record in enumerate(screed.open(filename, parse_description=0)):
     if n % 10000 == 0:
         print '...', n
     partition = record.name.split()[-1]
@@ -37,7 +37,7 @@ new_filename += '.renamed.fasta.gz'
 print 'creating', new_filename
 outfp = gzip.open(new_filename, 'wb')
 
-for n, record in enumerate(screed.open(sys.argv[1])):
+for n, record in enumerate(screed.open(sys.argv[2], parse_description=0)):
     if n % 10000 == 0:
         print '...writing', n
     partition = record.name.split()[-1]
@@ -45,7 +45,7 @@ for n, record in enumerate(screed.open(sys.argv[1])):
     partition_sofar[partition] = sofar
     partition_size = partition_sizes[partition]
 
-    new_name = 'lamp3.id%d.tr%s %d_of_%d_in_tr%s len=%d id=%s tr=%s' % \
-        (seq_id, partition, sofar, partition_size, partition, len(record.sequence), seq_id, partition)
+    new_name = '%s.id%d.tr%s %d_of_%d_in_tr%s len=%d id=%s tr=%s' % \
+        (prefix, seq_id, partition, sofar, partition_size, partition, len(record.sequence), seq_id, partition)
     outfp.write('>%s\n%s\n' % (new_name, record.sequence))
     seq_id += 1
