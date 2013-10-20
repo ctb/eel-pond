@@ -4,7 +4,7 @@ import blastparser
 import cPickle
 import argparse
 
-def collect_best_hits(filename, qfn=None):
+def collect_best_hits(filename):
     d = {}
     for n, record in enumerate(blastparser.parse_fp(open(filename))):
         if n % 25000 == 0:
@@ -13,8 +13,8 @@ def collect_best_hits(filename, qfn=None):
         for hit in record.hits:
             for match in hit.matches:
                 query = record.query_name
-                if qfn:
-                    query = qfn(query)
+                if query.startswith('gi|'):
+                    query = parse_ncbi_query(query)
                 subject = hit.subject_name
                 score = match.score
 
@@ -41,8 +41,6 @@ def main():
     parser.add_argument('tr_vs_ref')
     parser.add_argument('ref_vs_tr')
     parser.add_argument('output')
-    parser.add_argument('-z', '--no-ncbi', action='store_false',
-                        dest='ncbi', default=True)
     parser.add_argument('-n', '--no-parse', action='store_false',
                         dest='do_parse', default=True)
     args = parser.parse_args()
@@ -57,10 +55,7 @@ def main():
         d = collect_best_hits(tr_vs_ref)
 
         print 'collecting best hits from:', ref_vs_tr
-        if args.ncbi:
-            e = collect_best_hits(ref_vs_tr, parse_ncbi_query)
-        else:
-            e = collect_best_hits(ref_vs_tr)
+        e = collect_best_hits(ref_vs_tr)
 
         print 'saving best hits result to', cachefile
         fp = open(cachefile, 'w')

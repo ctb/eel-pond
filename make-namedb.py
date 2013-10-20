@@ -8,15 +8,18 @@ outfile = sys.argv[2]
 
 d = {}
 e = {}
+is_ncbi = False
 for record in screed.open(sys.argv[1]):
     if record.name.startswith('gi|'):
-       ident = record.name.split('|')[3]
+        is_ncbi = True
+        ident = record.name.split('|')[3]
     else:
-       ident = record.name
+        ident = record.name
     d[ident] = record.description
     e[ident] = record.name
 
 fp = open(outfile, 'w')
+dump(is_ncbi, fp)
 dump(d, fp)
 
 fp = open(outfile + '.fullname', 'w')
