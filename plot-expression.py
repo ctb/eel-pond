@@ -6,6 +6,7 @@ import argparse
 import csv
 import numpy
 import math
+import os
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,11 +22,15 @@ def main():
     n1 = int(n1)
     n2 = int(n2)
 
+    print 'Got sample spec: %d from condition 1, %d from condition 2' % (n1,n2)
+
     fieldnames = ['']
     for i in range(n1):
         fieldnames.append('s1.%d' % i)
     for i in range(n2):
         fieldnames.append('s2.%d' % i)
+
+    print 'Loading differentially expressed gene names from', args.changed_file
 
     changed_names = set()
     fp = open(args.changed_file, 'rb')
@@ -34,6 +39,8 @@ def main():
         name = row['transcript family']
         changed_names.add(name)
     fp.close()
+
+    print 'Loading gene matrix from', args.genes_matrix
 
     changed_values = []
     rows = []
@@ -62,13 +69,21 @@ def main():
     rows = numpy.array(rows)
     changed_values = numpy.array(changed_values)
 
+    print 'plotting...'
+
     plot(rows[:,0], rows[:,1], 'bo', alpha='0.1', label='all genes')
     plot(changed_values[:,0], changed_values[:,1], 'r.', alpha='0.2', label='DE genes')
+
     ax = axes()
     ax.set_yscale('log')
     ax.set_xscale('log')
     legend(loc='upper left')
-    savefig('xxx.png')
+    xlabel('Expression in condition 1')
+    ylabel('Expression in condition 2')
+
+    filename = os.path.basename(args.genes_matrix) + '.png'
+    print 'Output figure to:', filename
+    savefig(filename)
 
 if __name__ == '__main__':
     main()
