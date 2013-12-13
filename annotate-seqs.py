@@ -34,8 +34,8 @@ def main():
         annot = None
 
         o = ortho.get(name)
-        if o:
-            annot = namedb.mouse_names.get(transform_name(o))
+        if o and transform_name(o) in namedb.mouse_names:
+            annot = namedb.mouse_names[transform_name(o)]
             tr_dict[tr] = ('ortho', annot)
         else:
             if tr in tr_dict and tr_dict[tr][0] == 'ortho':
@@ -50,9 +50,9 @@ def main():
 
                 h, score = h[0]
                 score = round(float(score) / float(len(record.sequence)) * 100)
-                annot = namedb.mouse_names[transform_name(h)]
+                annot = namedb.mouse_names.get(transform_name(h))
 
-                if score > oldscore:
+                if annot and score > oldscore:
                     tr_dict[tr] = (oldscore, annot)
 
     outfilename = os.path.basename(transcript_file) + '.annot'
@@ -96,15 +96,15 @@ def main():
         annot = None
 
         o = ortho.get(name)
-        if o:
-            annot = namedb.mouse_names.get(transform_name(o))
+        if o and transform_name(o) in namedb.mouse_names:
+            annot = namedb.mouse_names[transform_name(o)]
             ortho_col = annot
             annot = "ortho:" + annot
             annot_ortho_count += 1
         else:
             h = homol.get(name)
 
-            if h:
+            if h and transform_name(h[0][0]) in namedb.mouse_names:
                 h, score = h[0]
                 score = round(float(score) / float(len(record.sequence)) * 100)
                 annot = namedb.mouse_names[transform_name(h)]
