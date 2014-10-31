@@ -71,7 +71,7 @@ def main():
 
     print 'plotting...'
 
-    plot(rows[:,0], rows[:,1], 'bo', alpha='0.1', label='all genes')
+    plot(rows[:,0], rows[:,1], 'bo', alpha=0.1, label='all genes')
     plot(changed_values[:,0], changed_values[:,1], 'r.', alpha='0.2', label='DE genes')
 
     ax = axes()
